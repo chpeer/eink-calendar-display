@@ -1,3 +1,5 @@
+![CI](https://github.com/chpeer/eink-calendar-display/workflows/CI/badge.svg)
+
 # ESP32 E-Ink Calendar Display
 
 A calendar display using an ESP32 and a 7.5" e-ink display that fetches events from Home Assistant and shows them in a beautiful two-week calendar view.

@@ -1,0 +1,135 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Cache PlatformIO
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.platformio
+          .pio
+        key: ${{ runner.os }}-pio-test-${{ hashFiles('**/platformio.ini') }}
+        restore-keys: |
+          ${{ runner.os }}-pio-test-
+          ${{ runner.os }}-pio-
+
+    - name: Install PlatformIO
+      run: |
+        python -m pip install --upgrade pip
+        pip install platformio
+
+    - name: Run Native Tests
+      run: pio test -e native
+
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: .pio/build/native/test/
+        retention-days: 30
+
+  build:
+    name: Build Firmware
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Cache PlatformIO
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.platformio
+          .pio
+        key: ${{ runner.os }}-pio-build-${{ hashFiles('**/platformio.ini') }}
+        restore-keys: |
+          ${{ runner.os }}-pio-build-
+          ${{ runner.os }}-pio-
+
+    - name: Install PlatformIO
+      run: |
+        python -m pip install --upgrade pip
+        pip install platformio
+
+    - name: Build Firmware
+      run: pio run -e dfrobot_firebeetle2_esp32e
+
+    - name: Upload Firmware Binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: firmware
+        path: .pio/build/dfrobot_firebeetle2_esp32e/firmware.bin
+        retention-days: 90
+
+    - name: Upload Firmware ELF (for debugging)
+      uses: actions/upload-artifact@v4
+      with:
+        name: firmware-elf
+        path: .pio/build/dfrobot_firebeetle2_esp32e/firmware.elf
+        retention-days: 30
+
+  check:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Cache PlatformIO
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.platformio
+          .pio
+        key: ${{ runner.os }}-pio-check-${{ hashFiles('**/platformio.ini') }}
+        restore-keys: |
+          ${{ runner.os }}-pio-check-
+          ${{ runner.os }}-pio-
+
+    - name: Install PlatformIO
+      run: |
+        python -m pip install --upgrade pip
+        pip install platformio
+
+    - name: Run Static Code Analysis
+      run: pio check --skip-packages -e dfrobot_firebeetle2_esp32e --fail-on-defect=medium
+      continue-on-error: true
+
+    - name: Upload Check Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: static-analysis-results
+        path: .pio/build/dfrobot_firebeetle2_esp32e/check/
+        retention-days: 30
