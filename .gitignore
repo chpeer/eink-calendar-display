@@ -1,6 +1,6 @@
 # PlatformIO
 .pio
-.vscode
+.vscode/
 calendar_nativ.code-workspace
 
 # Configuration files with credentials

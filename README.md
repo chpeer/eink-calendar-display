@@ -17,7 +17,7 @@ The hardware setup pretty much follows [esp32-weather-epd](https://github.com/lm
 - **ESP32 Board**: DFRobot FireBeetle 2 ESP32-E
 - **Display**: GoodDisplay 7.5" 3-color e-ink (GDEY075Z08) - 800x480 pixels
 - **Adapter Board**: DESPI-C02
-- **Battery**: 3.7V 3000 mAh 11.1Wh 505573 Polymer Lithium Battery - Lihttps://www.aliexpress.com/item/1005004774876351.html?spm=a2g0o.order_list.order_list_main.10.27761802vFOR0snk
+- **Battery**: 3.7V 3000 mAh 11.1Wh 505573 Polymer Lithium Battery - [Link](https://www.aliexpress.com/item/1005004774876351.html?spm=a2g0o.order_list.order_list_main.10.27761802vFOR0s)
 
 For the case I printed [Kingfisher's Weather Station E-Ink Frame](https://www.printables.com/model/1139047-weather-station-e-ink-frame) but also used[ Katherine Dubé's](https://www.printables.com/model/1276878-weather-station-e-ink-frame-back-panel-and-front-b) back panel.
 
