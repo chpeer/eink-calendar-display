@@ -1,0 +1,35 @@
+# PlatformIO
+.pio
+.vscode
+calendar_nativ.code-workspace
+
+# Configuration files with credentials
+src/config.h
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+*.swp
+*.swo
+*~
+
+# Build artifacts
+*.o
+*.elf
+*.bin
+*.hex
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Personal notes and local settings
+.claude
