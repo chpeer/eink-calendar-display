@@ -76,6 +76,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install platformio
 
+    - name: Copy config template
+      run: cp src/config.h.template src/config.h
+
     - name: Build Firmware
       run: pio run -e dfrobot_firebeetle2_esp32e
 
@@ -121,6 +124,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install platformio
+
+    - name: Copy config template
+      run: cp src/config.h.template src/config.h
 
     - name: Run Static Code Analysis
       run: pio check --skip-packages -e dfrobot_firebeetle2_esp32e --fail-on-defect=medium
