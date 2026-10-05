@@ -155,9 +155,23 @@ As a result of using Claude Code, ehe code has quite some potential for refinmen
 
 ## License
 
-This project is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License - see the [LICENSE](LICENSE) file for details.
+Copyright (C) 2025 chpeer
 
-**Non-Commercial Use Only**: This project may not be used for commercial purposes.
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. See the [LICENSE](LICENSE) file for the full text.
+
+Parts of this project (WiFi handling, battery monitoring, deep sleep scheduling, status bar and error screen rendering) are derived from [esp32-weather-epd](https://github.com/lmarzen/esp32-weather-epd), Copyright (C) 2022-2024 Luke Marzen, licensed under the GNU General Public License v3.0.
+
+### Third-party assets
+
+| Asset | Source | License |
+|-------|--------|---------|
+| Battery percentage approximation (`calcBatPercent`) | [BatterySense](https://github.com/rlogiacco/BatterySense) by Roberto Lo Giacco | [GNU LGPL v3.0](https://www.gnu.org/licenses/lgpl-3.0.html) |
+| WiFi icons (`wifi_*`) | [Phosphor Icons](https://github.com/phosphor-icons/homepage) | [MIT License](https://opensource.org/licenses/MIT) |
+| Battery icons (`battery_*`) | [Google Material Symbols](https://fonts.google.com/icons) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
+| Weather icons (`wi_*`) | [Weather Icons](https://github.com/erikflowers/weather-icons) by Lukas Bischoff / Erik Flowers | [SIL OFL 1.1](https://openfontlicense.org) |
+| Dongle font (`DongleLight*.h`) | [Dongle](https://fonts.google.com/specimen/Dongle) via Google Fonts | [SIL OFL 1.1](https://openfontlicense.org) |
+
+The icon bitmaps were converted from the original SVGs by the esp32-weather-epd project.
 
 ## Acknowledgments
 
