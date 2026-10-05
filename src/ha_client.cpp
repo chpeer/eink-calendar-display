@@ -1,6 +1,7 @@
 #include "ha_client.h"
 #include "config.h"
 #include "sample_data.h"
+#include "date_utils.h"
 
 HAClient::HAClient() {
   // Constructor
@@ -144,43 +145,8 @@ bool HAClient::isFullDayEvent(const String& start, const String& end) {
 }
 
 int HAClient::calculateDayNumber(const String& dateStr, const String& weekStart) {
-  // Extract date portion (handles both "YYYY-MM-DD" and "YYYY-MM-DDTHH:MM:SS+TZ" formats)
-  String date = dateStr;
-  int tIndex = date.indexOf('T');
-  if (tIndex != -1) {
-    date = date.substring(0, tIndex);
-  }
-
-  // Simple day calculation relative to week start
-  // This is a simplified version - you may want to use a proper date library
-  int dateYear = date.substring(0, 4).toInt();
-  int dateMonth = date.substring(5, 7).toInt();
-  int dateDay = date.substring(8, 10).toInt();
-
-  int weekStartYear = weekStart.substring(0, 4).toInt();
-  int weekStartMonth = weekStart.substring(5, 7).toInt();
-  int weekStartDay = weekStart.substring(8, 10).toInt();
-
-  // Simple calculation for same month
-  if (dateYear == weekStartYear && dateMonth == weekStartMonth) {
-    return dateDay - weekStartDay + 1;
-  }
-
-  // Handle month boundaries (simplified)
-  if (dateYear == weekStartYear) {
-    if (dateMonth == weekStartMonth + 1) {
-      // Next month - assume previous month had 31 days
-      return (31 - weekStartDay + 1) + dateDay;
-    }
-  }
-
-  // Handle year boundary (December to January)
-  if (weekStartYear == dateYear - 1 && weekStartMonth == 12 && dateMonth == 1) {
-    return (31 - weekStartDay + 1) + dateDay;
-  }
-
-  // Default fallback
-  return 1;
+  // Handles both "YYYY-MM-DD" and "YYYY-MM-DDTHH:MM:SS+TZ" formats
+  return dayNumberFromWeekStart(dateStr.c_str(), weekStart.c_str());
 }
 
 String HAClient::extractTime(const String& datetime) {

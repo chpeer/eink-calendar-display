@@ -1,5 +1,6 @@
 #include <unity.h>
 #include <ArduinoJson.h>
+#include "../../src/date_utils.h"
 
 #ifndef UNIT_TEST
 #include <Arduino.h>
@@ -92,35 +93,7 @@ bool isFullDayEvent(const String& start, const String& end) {
 }
 
 int calculateDayNumber(const String& dateStr, const String& weekStart) {
-    String date = dateStr;
-    int tIndex = date.indexOf('T');
-    if (tIndex != -1) {
-        date = date.substring(0, tIndex);
-    }
-
-    int dateYear = date.substring(0, 4).toInt();
-    int dateMonth = date.substring(5, 7).toInt();
-    int dateDay = date.substring(8, 10).toInt();
-
-    int weekStartYear = weekStart.substring(0, 4).toInt();
-    int weekStartMonth = weekStart.substring(5, 7).toInt();
-    int weekStartDay = weekStart.substring(8, 10).toInt();
-
-    if (dateYear == weekStartYear && dateMonth == weekStartMonth) {
-        return dateDay - weekStartDay + 1;
-    }
-
-    if (dateYear == weekStartYear) {
-        if (dateMonth == weekStartMonth + 1) {
-            return (31 - weekStartDay + 1) + dateDay;
-        }
-    }
-
-    if (weekStartYear == dateYear - 1 && weekStartMonth == 12 && dateMonth == 1) {
-        return (31 - weekStartDay + 1) + dateDay;
-    }
-
-    return 1;
+    return dayNumberFromWeekStart(dateStr.c_str(), weekStart.c_str());
 }
 
 String extractTime(const String& datetime) {
@@ -340,6 +313,12 @@ void test_calculate_day_number_with_time() {
     TEST_ASSERT_EQUAL_INT(5, dayNum);  // Jan 10 is day 5 from Jan 6
 }
 
+void test_calculate_day_number_across_30_day_month() {
+    // Week starting Mon 28 Sep 2026: Sun 4 Oct must be day 7, not day 8
+    TEST_ASSERT_EQUAL_INT(7, calculateDayNumber("2026-10-04", "2026-09-28"));
+    TEST_ASSERT_EQUAL_INT(4, calculateDayNumber("2026-10-01T09:00:00+01:00", "2026-09-28"));
+}
+
 void test_parse_invalid_json() {
     HAResponse response;
     const char* invalidJson = "{ invalid json }";
@@ -382,6 +361,7 @@ int main(int argc, char **argv) {
     RUN_TEST(test_is_full_day_event_false);
     RUN_TEST(test_calculate_day_number_same_month);
     RUN_TEST(test_calculate_day_number_with_time);
+    RUN_TEST(test_calculate_day_number_across_30_day_month);
     RUN_TEST(test_parse_invalid_json);
     RUN_TEST(test_parse_empty_events_array);
 
