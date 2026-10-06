@@ -64,13 +64,19 @@ uint32_t readBatteryVoltage()
   // __attribute__((unused)) disables compiler warnings about this variable
   // being unused (Clang, GCC) which is the case when DEBUG_LEVEL == 0.
   esp_adc_cal_value_t val_type __attribute__((unused));
-
+  // Keep the SAR ADC forced on around the read, exactly like
+  // esp32-weather-epd does, so both devices take the sample under the same
+  // ADC power conditions.
+  adc_power_acquire();
   uint16_t adc_val = analogRead(PIN_BAT_ADC);
+  adc_power_release();
 
   // We will use the eFuse ADC calibration bits, to get accurate voltage
   // readings. The DFRobot FireBeetle Esp32-E V1.0's ADC is 12 bit, and uses
   // 11db attenuation, which gives it a measurable input voltage range of 150mV
   // to 2450mV.
+  // ADC_ATTEN_DB_12 is the same enum value (3) as the reference's
+  // ADC_ATTEN_11db alias in arduino-esp32 2.0.17 / ESP-IDF 4.4.7.
   val_type = esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_12,
                                       ADC_WIDTH_BIT_12, 1100, &adc_chars);
 
