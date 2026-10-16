@@ -1,5 +1,6 @@
 #include "drawing.h"
 #include "utilities.h"
+#include "date_utils.h"
 #include "icons.h"
 #include "DongleLight9pt7b.h"
 #include "DongleLight9pt15b.h"
@@ -219,59 +220,12 @@ const char *getWiFidesc(int rssi)
 
 // Helper function to calculate grid position from date string (YYYY-MM-DD)
 int calculateGridPosition(String date, String weekStart) {
-  // Extract components from date strings
-  int dateYear = date.substring(0, 4).toInt();
-  int dateMonth = date.substring(5, 7).toInt();
-  int dateDay = date.substring(8, 10).toInt();
-
-  int weekStartYear = weekStart.substring(0, 4).toInt();
-  int weekStartMonth = weekStart.substring(5, 7).toInt();
-  int weekStartDay = weekStart.substring(8, 10).toInt();
-
-  // Simple date calculation for same month
-  if (dateYear == weekStartYear && dateMonth == weekStartMonth) {
-    return dateDay - weekStartDay + 1;
-  }
-
-  // Handle month boundaries (simplified for common cases)
-  if (dateYear == weekStartYear) {
-    if (dateMonth == weekStartMonth + 1) {
-      // Next month - assume previous month had 31 days
-      return (31 - weekStartDay + 1) + dateDay;
-    } else if (dateMonth == weekStartMonth - 1) {
-      // Previous month case (shouldn't happen in normal calendar view)
-      return dateDay - weekStartDay + 1;
-    }
-  }
-
-  // Handle year boundary (December to January)
-  if (weekStartYear == dateYear - 1 && weekStartMonth == 12 && dateMonth == 1) {
-    return (31 - weekStartDay + 1) + dateDay;
-  }
-
-  // Default fallback
-  return 1;
+  return dayNumberFromWeekStart(date.c_str(), weekStart.c_str());
 }
 
 // Helper function to calculate calendar day number for display
 int calculateCalendarDay(String weekStart, int weekNumber, int dayInWeek) {
-  int weekStartYear = weekStart.substring(0, 4).toInt();
-  int weekStartMonth = weekStart.substring(5, 7).toInt();
-  int weekStartDay = weekStart.substring(8, 10).toInt();
-
-  // Calculate total days offset from week start
-  int totalDaysOffset = (weekNumber * 7) + dayInWeek;
-
-  // Add offset to week start day
-  int resultDay = weekStartDay + totalDaysOffset;
-
-  // Simple month handling (assumes 31 days per month for simplicity)
-  // In production, you'd want proper date arithmetic with actual month lengths
-  if (resultDay > 31) {
-    resultDay = resultDay - 31; // Move to next month
-  }
-
-  return resultDay;
+  return dayOfMonthAfter(weekStart.c_str(), (weekNumber * 7) + dayInWeek);
 }
 
 void initDisplay() {
